@@ -1,5 +1,6 @@
 import MindmapNode from "@/components/MindmapNode";
 import DetailPanel from "@/components/DetailPanel";
+import ThemeToggle from "@/components/ThemeToggle";
 import { mindmapData } from "@/data/mindmapData";
 import { ConceptDetail } from "@/data/conceptDetails";
 import { Button } from "@/components/ui/button";
@@ -43,23 +44,24 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 flex flex-col transition-colors duration-300">
       {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-slate-200/50 bg-white/80 backdrop-blur-sm shadow-sm">
+      <header className="sticky top-0 z-40 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm shadow-sm dark:shadow-lg transition-colors duration-300">
         <div className="container mx-auto px-4 py-4 sm:py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
                 CS50P Mind Map
               </h1>
-              <p className="text-sm sm:text-base text-slate-600 mt-1">
+              <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 mt-1">
                 Explore os conceitos de cada aula interativamente
               </p>
             </div>
 
             {/* Controles de Zoom e Navegação */}
             <div className="flex items-center gap-2 flex-wrap">
-              <div className="flex items-center gap-2 bg-slate-100 rounded-lg p-2">
+              <ThemeToggle />
+              <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-lg p-2 transition-colors duration-300">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -119,11 +121,11 @@ export default function Home() {
         <main className="flex-1 overflow-y-auto">
           <div className="container mx-auto px-4 py-8 sm:py-12">
             {/* Instruções */}
-            <div className="mb-8 p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-lg">
-              <h2 className="text-lg font-semibold text-blue-900 mb-2">
+            <div className="mb-8 p-4 sm:p-6 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 rounded-lg transition-colors duration-300">
+              <h2 className="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2">
                 Como usar este mapa mental:
               </h2>
-              <ul className="text-sm text-blue-800 space-y-1">
+              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
                 <li>✨ Clique nas caixas para expandir/recolher os conceitos</li>
                 <li>
                   📖 Clique em um conceito para ver exemplos de código no painel
@@ -152,7 +154,7 @@ export default function Home() {
             {/* Mindmap Container */}
             <div
               id="mindmap-container"
-              className="bg-white rounded-xl shadow-lg p-6 sm:p-8 overflow-x-auto"
+              className="bg-white dark:bg-slate-800 rounded-xl shadow-lg dark:shadow-2xl p-6 sm:p-8 overflow-x-auto transition-colors duration-300"
               style={{
                 transform: `scale(${scale})`,
                 transformOrigin: "top center",

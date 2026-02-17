@@ -12,7 +12,7 @@ export default function QuizPage() {
 
   if (quizStarted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 sm:p-6">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6 transition-colors duration-300">
         <div className="mb-6">
           <Button
             variant="ghost"
@@ -38,7 +38,7 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 sm:p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800 p-4 sm:p-6 transition-colors duration-300">
       {/* Header */}
       <div className="mb-8">
         <Button
@@ -49,10 +49,10 @@ export default function QuizPage() {
           <ArrowLeft size={16} />
           Voltar ao Mapa Mental
         </Button>
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">
           Quiz CS50P
         </h1>
-        <p className="text-slate-600 mt-2">
+        <p className="text-slate-600 dark:text-slate-400 mt-2">
           Teste seus conhecimentos sobre os conceitos do curso
         </p>
       </div>

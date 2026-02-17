@@ -21,8 +21,8 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
 
   if (!concept) {
     return (
-      <div className="flex flex-col w-96 bg-white border-l border-slate-200 shadow-lg">
-        <div className="flex items-center justify-center h-full text-slate-500">
+      <div className="flex flex-col w-96 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 shadow-lg dark:shadow-2xl transition-colors duration-300">
+        <div className="flex items-center justify-center h-full text-slate-500 dark:text-slate-400">
           <p className="text-center px-6">
             Selecione um conceito no mapa mental para ver detalhes
           </p>
@@ -32,9 +32,9 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
   }
 
   return (
-    <div className="flex flex-col w-96 bg-white border-l border-slate-200 shadow-lg overflow-hidden">
+    <div className="flex flex-col w-96 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 shadow-lg dark:shadow-2xl overflow-hidden transition-colors duration-300">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 flex items-center justify-between">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 text-white p-4 flex items-center justify-between transition-colors duration-300">
         <div className="flex-1">
           <h2 className="text-lg font-bold">{concept.title}</h2>
           <p className="text-sm opacity-90">{concept.description}</p>
@@ -50,19 +50,19 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {/* Explicação */}
-        <div className="p-4 border-b border-slate-200">
-          <h3 className="text-sm font-semibold text-slate-900 mb-2">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-700 transition-colors duration-300">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
             Explicação
           </h3>
-          <p className="text-sm text-slate-700 leading-relaxed">
+          <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             {concept.explanation}
           </p>
         </div>
 
         {/* Exemplo de Código */}
-        <div className="p-4 border-b border-slate-200">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-700 transition-colors duration-300">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-slate-900">
+            <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
               Exemplo de Código
             </h3>
             <Button
@@ -84,23 +84,23 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
               )}
             </Button>
           </div>
-          <pre className="bg-slate-900 text-slate-100 p-3 rounded text-xs overflow-x-auto font-mono leading-relaxed">
+          <pre className="bg-slate-900 dark:bg-slate-950 text-slate-100 dark:text-slate-200 p-3 rounded text-xs overflow-x-auto font-mono leading-relaxed transition-colors duration-300">
             <code>{concept.codeExample}</code>
           </pre>
         </div>
 
         {/* Pontos-chave */}
-        <div className="p-4">
-          <h3 className="text-sm font-semibold text-slate-900 mb-3">
+        <div className="p-4 border-t border-slate-200 dark:border-slate-700 transition-colors duration-300">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-3">
             Pontos-chave
           </h3>
           <ul className="space-y-2">
             {concept.keyPoints.map((point, index) => (
               <li
                 key={index}
-                className="flex gap-2 text-sm text-slate-700"
+                className="flex gap-2 text-sm text-slate-700 dark:text-slate-300 transition-colors duration-300"
               >
-                <span className="text-blue-600 font-bold flex-shrink-0">
+                <span className="text-blue-600 dark:text-blue-400 font-bold flex-shrink-0">
                   •
                 </span>
                 <span>{point}</span>
