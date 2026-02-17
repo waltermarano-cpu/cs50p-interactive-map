@@ -1,15 +1,26 @@
 import MindmapNode from "@/components/MindmapNode";
+import DetailPanel from "@/components/DetailPanel";
 import { mindmapData } from "@/data/mindmapData";
+import { ConceptDetail } from "@/data/conceptDetails";
 import { Button } from "@/components/ui/button";
 import { Download, ZoomIn, ZoomOut } from "lucide-react";
 import { useState } from "react";
 
 export default function Home() {
   const [scale, setScale] = useState(1);
+  const [selectedConcept, setSelectedConcept] = useState<ConceptDetail | null>(
+    null
+  );
+  const [selectedId, setSelectedId] = useState<string>("");
 
   const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.1, 1.5));
   const handleZoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.7));
   const handleReset = () => setScale(1);
+
+  const handleSelectConcept = (concept: ConceptDetail) => {
+    setSelectedConcept(concept);
+    setSelectedId(concept.id);
+  };
 
   const handleDownload = () => {
     const element = document.getElementById("mindmap-container");
@@ -30,7 +41,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-slate-200/50 bg-white/80 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto px-4 py-4 sm:py-6">
@@ -81,87 +92,114 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 sm:py-12">
-        {/* Instruções */}
-        <div className="mb-8 p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-lg">
-          <h2 className="text-lg font-semibold text-blue-900 mb-2">
-            Como usar este mapa mental:
-          </h2>
-          <ul className="text-sm text-blue-800 space-y-1">
-            <li>✨ Clique nas caixas para expandir/recolher os conceitos</li>
-            <li>🔍 Use os controles de zoom para ajustar a visualização</li>
-            <li>📊 Explore a hierarquia de tópicos de cada aula</li>
-          </ul>
-        </div>
+      {/* Main Content with Sidebar */}
+      <div className="flex flex-1 overflow-hidden">
+        <main className="flex-1 overflow-y-auto">
+          <div className="container mx-auto px-4 py-8 sm:py-12">
+            {/* Instruções */}
+            <div className="mb-8 p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-lg">
+              <h2 className="text-lg font-semibold text-blue-900 mb-2">
+                Como usar este mapa mental:
+              </h2>
+              <ul className="text-sm text-blue-800 space-y-1">
+                <li>✨ Clique nas caixas para expandir/recolher os conceitos</li>
+                <li>
+                  📖 Clique em um conceito para ver exemplos de código no painel
+                  lateral
+                </li>
+                <li>🔍 Use os controles de zoom para ajustar a visualização</li>
+                <li>📊 Explore a hierarquia de tópicos de cada aula</li>
+              </ul>
+            </div>
 
-        {/* Mindmap Container */}
-        <div
-          id="mindmap-container"
-          className="bg-white rounded-xl shadow-lg p-6 sm:p-8 overflow-x-auto"
-          style={{
-            transform: `scale(${scale})`,
-            transformOrigin: "top center",
-            transition: "transform 0.3s ease-in-out",
+            {/* Mindmap Container */}
+            <div
+              id="mindmap-container"
+              className="bg-white rounded-xl shadow-lg p-6 sm:p-8 overflow-x-auto"
+              style={{
+                transform: `scale(${scale})`,
+                transformOrigin: "top center",
+                transition: "transform 0.3s ease-in-out",
+              }}
+            >
+              <div className="inline-block min-w-full">
+                <MindmapNode
+                  node={mindmapData}
+                  level={0}
+                  isRoot={true}
+                  onSelectConcept={handleSelectConcept}
+                  selectedId={selectedId}
+                />
+              </div>
+            </div>
+
+            {/* Footer com informações */}
+            <div className="mt-8 p-4 sm:p-6 bg-slate-100 rounded-lg">
+              <h3 className="font-semibold text-slate-900 mb-3">
+                Sobre este mapa:
+              </h3>
+              <p className="text-sm text-slate-700 mb-3">
+                Este mapa mental interativo organiza todos os conceitos do curso
+                CS50P em uma estrutura hierárquica. Cada aula é representada por
+                uma cor única, facilitando a visualização das conexões entre
+                tópicos. Clique em qualquer conceito para ver exemplos de código
+                e explicações detalhadas.
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-emerald-500 to-emerald-300" />
+                  <span>Aula 0</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-cyan-500 to-cyan-300" />
+                  <span>Aula 1</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-purple-500 to-purple-300" />
+                  <span>Aula 2</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-orange-500 to-orange-300" />
+                  <span>Aula 3</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-pink-500 to-pink-300" />
+                  <span>Aula 4</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-red-500 to-red-300" />
+                  <span>Aula 5</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-indigo-500 to-indigo-300" />
+                  <span>Aula 6</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-teal-500 to-teal-300" />
+                  <span>Aula 7</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-amber-500 to-amber-300" />
+                  <span>Aula 8</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded bg-gradient-to-r from-lime-500 to-lime-300" />
+                  <span>Aula 9</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* Detail Panel Sidebar */}
+        <DetailPanel
+          concept={selectedConcept}
+          onClose={() => {
+            setSelectedConcept(null);
+            setSelectedId("");
           }}
-        >
-          <div className="inline-block min-w-full">
-            <MindmapNode node={mindmapData} level={0} isRoot={true} />
-          </div>
-        </div>
-
-        {/* Footer com informações */}
-        <div className="mt-8 p-4 sm:p-6 bg-slate-100 rounded-lg">
-          <h3 className="font-semibold text-slate-900 mb-3">Sobre este mapa:</h3>
-          <p className="text-sm text-slate-700 mb-3">
-            Este mapa mental interativo organiza todos os conceitos do curso
-            CS50P em uma estrutura hierárquica. Cada aula é representada por uma
-            cor única, facilitando a visualização das conexões entre tópicos.
-          </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 text-xs">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-emerald-500 to-emerald-300" />
-              <span>Aula 0</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-cyan-500 to-cyan-300" />
-              <span>Aula 1</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-purple-500 to-purple-300" />
-              <span>Aula 2</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-orange-500 to-orange-300" />
-              <span>Aula 3</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-pink-500 to-pink-300" />
-              <span>Aula 4</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-red-500 to-red-300" />
-              <span>Aula 5</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-indigo-500 to-indigo-300" />
-              <span>Aula 6</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-teal-500 to-teal-300" />
-              <span>Aula 7</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-amber-500 to-amber-300" />
-              <span>Aula 8</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-gradient-to-r from-lime-500 to-lime-300" />
-              <span>Aula 9</span>
-            </div>
-          </div>
-        </div>
-      </main>
+        />
+      </div>
     </div>
   );
 }

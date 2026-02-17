@@ -1,17 +1,22 @@
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { MindmapNode as MindmapNodeType } from "@/data/mindmapData";
+import { ConceptDetail, conceptDetails } from "@/data/conceptDetails";
 
 interface MindmapNodeProps {
   node: MindmapNodeType;
   level: number;
   isRoot?: boolean;
+  onSelectConcept?: (concept: ConceptDetail) => void;
+  selectedId?: string;
 }
 
 export default function MindmapNode({
   node,
   level,
   isRoot = false,
+  onSelectConcept,
+  selectedId,
 }: MindmapNodeProps) {
   const [isExpanded, setIsExpanded] = useState(isRoot);
 
@@ -30,10 +35,25 @@ export default function MindmapNode({
     ? `bg-gradient-to-r ${node.color}`
     : `bg-gradient-to-r ${node.color}`;
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // Se tem filhos, expande/recolhe
+    if (hasChildren) {
+      setIsExpanded(!isExpanded);
+    }
+    // Se é um conceito (não raiz), seleciona para o painel
+    if (!isRoot && onSelectConcept) {
+      const detail = conceptDetails[node.id];
+      if (detail) {
+        onSelectConcept(detail);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col items-start gap-2">
       <button
-        onClick={() => setIsExpanded(!isExpanded)}
+        onClick={handleClick}
         className={`
           relative group
           ${sizeClasses}
@@ -47,6 +67,7 @@ export default function MindmapNode({
           whitespace-nowrap
           border border-white/20
           backdrop-blur-sm
+          ${selectedId === node.id ? "ring-2 ring-white ring-offset-2" : ""}
         `}
       >
         {hasChildren && (
@@ -85,6 +106,8 @@ export default function MindmapNode({
               node={child}
               level={level + 1}
               isRoot={false}
+              onSelectConcept={onSelectConcept}
+              selectedId={selectedId}
             />
           ))}
         </div>
