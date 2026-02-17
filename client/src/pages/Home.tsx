@@ -3,8 +3,9 @@ import DetailPanel from "@/components/DetailPanel";
 import { mindmapData } from "@/data/mindmapData";
 import { ConceptDetail } from "@/data/conceptDetails";
 import { Button } from "@/components/ui/button";
-import { Download, ZoomIn, ZoomOut } from "lucide-react";
+import { Download, ZoomIn, ZoomOut, BarChart3, User } from "lucide-react";
 import { useState } from "react";
+import { useLocation } from "wouter";
 
 export default function Home() {
   const [scale, setScale] = useState(1);
@@ -12,6 +13,7 @@ export default function Home() {
     null
   );
   const [selectedId, setSelectedId] = useState<string>("");
+  const [, setLocation] = useLocation();
 
   const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.1, 1.5));
   const handleZoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.7));
@@ -55,37 +57,57 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Controles de Zoom */}
-            <div className="flex items-center gap-2 bg-slate-100 rounded-lg p-2">
+            {/* Controles de Zoom e Navegação */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2 bg-slate-100 rounded-lg p-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleZoomOut}
+                  disabled={scale <= 0.7}
+                  className="h-8 w-8 p-0"
+                >
+                  <ZoomOut size={16} />
+                </Button>
+                <span className="text-sm font-medium w-12 text-center">
+                  {Math.round(scale * 100)}%
+                </span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleZoomIn}
+                  disabled={scale >= 1.5}
+                  className="h-8 w-8 p-0"
+                >
+                  <ZoomIn size={16} />
+                </Button>
+                <div className="w-px h-6 bg-slate-300 mx-1" />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleReset}
+                  className="h-8 px-2 text-xs"
+                >
+                  Reset
+                </Button>
+              </div>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                onClick={handleZoomOut}
-                disabled={scale <= 0.7}
-                className="h-8 w-8 p-0"
+                onClick={() => setLocation('/quiz')}
+                className="gap-2"
               >
-                <ZoomOut size={16} />
+                <BarChart3 size={16} />
+                <span className="hidden sm:inline">Quiz</span>
               </Button>
-              <span className="text-sm font-medium w-12 text-center">
-                {Math.round(scale * 100)}%
-              </span>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                onClick={handleZoomIn}
-                disabled={scale >= 1.5}
-                className="h-8 w-8 p-0"
+                onClick={() => setLocation('/profile')}
+                className="gap-2"
               >
-                <ZoomIn size={16} />
-              </Button>
-              <div className="w-px h-6 bg-slate-300 mx-1" />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleReset}
-                className="h-8 px-2 text-xs"
-              >
-                Reset
+                <User size={16} />
+                <span className="hidden sm:inline">Perfil</span>
               </Button>
             </div>
           </div>
@@ -109,7 +131,22 @@ export default function Home() {
                 </li>
                 <li>🔍 Use os controles de zoom para ajustar a visualização</li>
                 <li>📊 Explore a hierarquia de tópicos de cada aula</li>
+                <li>🎯 Acesse o Quiz para testar seus conhecimentos</li>
+                <li>👤 Veja seu progresso na seção Perfil</li>
               </ul>
+            </div>
+
+            {/* Botão para baixar */}
+            <div className="mb-6 flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDownload}
+                className="gap-2"
+              >
+                <Download size={16} />
+                Baixar Mapa
+              </Button>
             </div>
 
             {/* Mindmap Container */}
