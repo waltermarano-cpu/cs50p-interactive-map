@@ -33,7 +33,7 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
   }
 
   return (
-    <div className="flex flex-col w-96 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 shadow-lg dark:shadow-2xl overflow-hidden transition-colors duration-300">
+    <div className="flex flex-col w-96 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 shadow-lg dark:shadow-2xl overflow-hidden transition-colors duration-300 animate-in slide-in-from-right duration-300">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-700 text-white p-4 flex items-center justify-between transition-colors duration-300">
         <div className="flex-1 pr-2">

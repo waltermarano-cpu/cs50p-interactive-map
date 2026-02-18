@@ -6,7 +6,7 @@ import { ConceptDetail } from "@/data/conceptDetails";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Download, ZoomIn, ZoomOut, BarChart3, User } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 
 export default function Home() {
@@ -20,6 +20,43 @@ export default function Home() {
   const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.1, 1.5));
   const handleZoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.7));
   const handleReset = () => setScale(1);
+
+  // Atalhos de teclado
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Evitar atalhos quando estiver digitando em inputs
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (e.key) {
+        case '+':
+        case '=':
+          e.preventDefault();
+          handleZoomIn();
+          break;
+        case '-':
+        case '_':
+          e.preventDefault();
+          handleZoomOut();
+          break;
+        case 'r':
+        case 'R':
+          e.preventDefault();
+          handleReset();
+          break;
+        case 'Escape':
+          if (selectedConcept) {
+            setSelectedConcept(null);
+            setSelectedId('');
+          }
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [selectedConcept]);
 
   const handleSelectConcept = (concept: ConceptDetail) => {
     setSelectedConcept(concept);
