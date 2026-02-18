@@ -11,7 +11,7 @@ interface ProfileProps {
 }
 
 export default function Profile({ onClose }: ProfileProps) {
-  const { profile, updateNome, updateEmail, getStatistics, resetProfile, isLoaded } = useUserProfile();
+  const { profile, updateNome, updateEmail, updateProfile, getStatistics, resetProfile, isLoaded } = useUserProfile();
   const [editMode, setEditMode] = useState(false);
   const [nome, setNome] = useState(profile.nome);
   const [email, setEmail] = useState(profile.email);
@@ -24,12 +24,9 @@ export default function Profile({ onClose }: ProfileProps) {
   }, [profile.nome, profile.email]);
 
   const handleSalvar = () => {
-    if (nome.trim()) {
-      updateNome(nome);
-    }
-    if (email.trim()) {
-      updateEmail(email);
-    }
+    console.log('handleSalvar chamado - nome:', nome, 'email:', email);
+    // Atualizar nome e email juntos em uma única operação
+    updateProfile(nome.trim() || profile.nome, email.trim() || profile.email);
     setEditMode(false);
   };
 
