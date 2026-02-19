@@ -66,9 +66,47 @@
     "lesson8Desc": "Object-oriented programming"
   },
   "buttons": {
-    "downloadMap": "Download Map"
+    "downloadMap": "Download Map",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close"
   },
   "messages": {
-    "featureComing": "Feature coming soon"
+    "featureComing": "Feature coming soon",
+    "profileUpdated": "Profile updated successfully!",
+    "profileReset": "Profile reset successfully!"
+  },
+  "profilePage": {
+    "title": "User Profile",
+    "studentName": "Student",
+    "emailPlaceholder": "your@email.com",
+    "level": "Level",
+    "points": "Points",
+    "bestScore": "Best Score",
+    "statistics": "Statistics",
+    "quizzesCompleted": "Quizzes Completed",
+    "classesExplored": "Classes Explored",
+    "confirmReset": "Are you sure you want to reset your profile? This will erase all your progress."
+  },
+  "detailPanel": {
+    "codeExamples": "Code Examples",
+    "noExamples": "No examples available",
+    "closePanel": "Close Panel"
+  },
+  "quiz": {
+    "title": "Test Your Knowledge",
+    "selectLesson": "Select a lesson to start",
+    "question": "Question",
+    "of": "of",
+    "answer": "Answer",
+    "submit": "Submit",
+    "next": "Next",
+    "finish": "Finish",
+    "score": "Score",
+    "correct": "Correct!",
+    "incorrect": "Incorrect!",
+    "timeElapsed": "Time elapsed",
+    "results": "Quiz Results"
   }
 }

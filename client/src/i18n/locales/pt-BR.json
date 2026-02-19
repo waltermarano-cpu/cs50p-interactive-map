@@ -66,9 +66,47 @@
     "lesson8Desc": "Programação orientada a objetos"
   },
   "buttons": {
-    "downloadMap": "Baixar Mapa"
+    "downloadMap": "Baixar Mapa",
+    "edit": "Editar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "close": "Fechar"
   },
   "messages": {
-    "featureComing": "Recurso em breve"
+    "featureComing": "Recurso em breve",
+    "profileUpdated": "Perfil atualizado com sucesso!",
+    "profileReset": "Perfil resetado com sucesso!"
+  },
+  "profilePage": {
+    "title": "Perfil do Usuário",
+    "studentName": "Estudante",
+    "emailPlaceholder": "seu@email.com",
+    "level": "Nível",
+    "points": "Pontos",
+    "bestScore": "Melhor Score",
+    "statistics": "Estatísticas",
+    "quizzesCompleted": "Quizzes Completados",
+    "classesExplored": "Aulas Exploradas",
+    "confirmReset": "Tem certeza que deseja resetar seu perfil? Isso apagará todo o progresso."
+  },
+  "detailPanel": {
+    "codeExamples": "Exemplos de Código",
+    "noExamples": "Nenhum exemplo disponível",
+    "closePanel": "Fechar Painel"
+  },
+  "quiz": {
+    "title": "Testar Conhecimentos",
+    "selectLesson": "Selecione uma aula para começar",
+    "question": "Pergunta",
+    "of": "de",
+    "answer": "Resposta",
+    "submit": "Enviar",
+    "next": "Próxima",
+    "finish": "Finalizar",
+    "score": "Pontuação",
+    "correct": "Correto!",
+    "incorrect": "Incorreto!",
+    "timeElapsed": "Tempo decorrido",
+    "results": "Resultados do Quiz"
   }
 }

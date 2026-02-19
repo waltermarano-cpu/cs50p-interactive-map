@@ -5,12 +5,14 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { User, Mail, Trophy, BookOpen, Zap, BarChart3, Edit2, Save, X } from 'lucide-react';
 import { useUserProfile } from '@/hooks/useUserProfile';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileProps {
   onClose?: () => void;
 }
 
 export default function Profile({ onClose }: ProfileProps) {
+  const { t } = useTranslation();
   const { profile, updateNome, updateEmail, updateProfile, getStatistics, resetProfile, isLoaded } = useUserProfile();
   const [editMode, setEditMode] = useState(false);
   const [nome, setNome] = useState(profile.nome);
@@ -30,9 +32,9 @@ export default function Profile({ onClose }: ProfileProps) {
   };
 
   const handleReset = () => {
-    if (confirm('Tem certeza que deseja resetar seu perfil? Isso apagará todo o progresso.')) {
+    if (confirm(t('profilePage.confirmReset'))) {
       resetProfile();
-      setNome('Estudante');
+      setNome(t('profilePage.studentName'));
       setEmail('');
     }
   };
@@ -65,13 +67,13 @@ export default function Profile({ onClose }: ProfileProps) {
                   <Input
                     value={nome}
                     onChange={(e) => setNome(e.target.value)}
-                    placeholder="Seu nome"
+                    placeholder={t('profilePage.studentName')}
                     className="font-semibold h-10"
                   />
                   <Input
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="seu@email.com"
+                    placeholder={t('profilePage.emailPlaceholder')}
                     type="email"
                     className="h-10"
                   />
@@ -95,7 +97,7 @@ export default function Profile({ onClose }: ProfileProps) {
               <>
                 <Button size="sm" onClick={handleSalvar} className="gap-2 h-10 px-4">
                   <Save className="w-4 h-4" />
-                  <span className="hidden sm:inline">Salvar</span>
+                  <span className="hidden sm:inline">{t('buttons.save')}</span>
                 </Button>
                 <Button
                   size="sm"
@@ -118,7 +120,7 @@ export default function Profile({ onClose }: ProfileProps) {
                 className="gap-2 h-10 px-4"
               >
                 <Edit2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Editar</span>
+                <span className="hidden sm:inline">{t('buttons.edit')}</span>
               </Button>
             )}
           </div>
@@ -130,15 +132,15 @@ export default function Profile({ onClose }: ProfileProps) {
             <Badge className={`${getNivelColor(profile.nivel)} mb-2 block w-fit mx-auto`}>
               {profile.nivel.charAt(0).toUpperCase() + profile.nivel.slice(1)}
             </Badge>
-            <p className="text-xs text-muted-foreground">Nível</p>
+            <p className="text-xs text-muted-foreground">{t('profilePage.level')}</p>
           </div>
           <div className="text-center p-3 rounded-lg bg-muted">
             <p className="text-2xl font-bold text-primary">{profile.pontos_totais}</p>
-            <p className="text-xs text-muted-foreground">Pontos</p>
+            <p className="text-xs text-muted-foreground">{t('profilePage.points')}</p>
           </div>
           <div className="text-center p-3 rounded-lg bg-muted">
             <p className="text-2xl font-bold text-green-600">{profile.melhor_pontuacao}</p>
-            <p className="text-xs text-muted-foreground">Melhor Score</p>
+            <p className="text-xs text-muted-foreground">{t('profilePage.bestScore')}</p>
           </div>
         </div>
       </Card>
@@ -147,16 +149,16 @@ export default function Profile({ onClose }: ProfileProps) {
       <Card className="p-6">
         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
           <BarChart3 className="w-5 h-5" />
-          Estatísticas
+          {t('profilePage.statistics')}
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-6">
           <div className="p-4 rounded-lg border">
-            <p className="text-sm text-muted-foreground mb-1">Quizzes Completados</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('profilePage.quizzesCompleted')}</p>
             <p className="text-2xl font-bold">{profile.quizzes_completados}</p>
           </div>
           <div className="p-4 rounded-lg border">
-            <p className="text-sm text-muted-foreground mb-1">Aulas Exploradas</p>
+            <p className="text-sm text-muted-foreground mb-1">{t('profilePage.classesExplored')}</p>
             <p className="text-2xl font-bold">{stats.aulas_exploradas}/10</p>
           </div>
           <div className="p-4 rounded-lg border">
@@ -182,7 +184,7 @@ export default function Profile({ onClose }: ProfileProps) {
         <Card className="p-6">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <BookOpen className="w-5 h-5" />
-            Aulas Exploradas
+            {t('profilePage.classesExplored')}
           </h3>
 
           <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">

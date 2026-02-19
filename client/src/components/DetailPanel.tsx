@@ -3,6 +3,7 @@ import { X, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { useTranslation } from 'react-i18next';
 
 interface DetailPanelProps {
   concept: ConceptDetail | null;
@@ -10,6 +11,7 @@ interface DetailPanelProps {
 }
 
 export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
+  const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
 
   const handleCopyCode = () => {
@@ -25,7 +27,7 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
       <div className="flex flex-col w-96 bg-white dark:bg-slate-800 border-l border-slate-200 dark:border-slate-700 shadow-lg dark:shadow-2xl transition-colors duration-300">
         <div className="flex items-center justify-center h-full text-slate-500 dark:text-slate-400">
           <p className="text-center px-6">
-            Selecione um conceito no mapa mental para ver detalhes
+            {t('detailPanel.noExamples')}
           </p>
         </div>
       </div>
@@ -52,7 +54,7 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
             </Button>
           </TooltipTrigger>
           <TooltipContent side="left" className="bg-slate-800 text-slate-200 border-slate-700">
-            <p>Fechar Painel</p>
+            <p>{t('detailPanel.closePanel')}</p>
           </TooltipContent>
         </Tooltip>
       </div>
@@ -62,7 +64,7 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
         {/* Explicação */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-700 transition-colors duration-300">
           <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100 mb-2">
-            Explicação
+            {t('detailPanel.codeExamples')}
           </h3>
           <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
             {concept.explanation}
@@ -73,7 +75,7 @@ export default function DetailPanel({ concept, onClose }: DetailPanelProps) {
         <div className="p-4 border-b border-slate-200 dark:border-slate-700 transition-colors duration-300">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
-              Exemplo de Código
+              {t('detailPanel.codeExamples')}
             </h3>
             <Button
               variant="ghost"
