@@ -8,8 +8,11 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip
 import { Download, ZoomIn, ZoomOut, BarChart3, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Home() {
+  const { t } = useTranslation();
   const [scale, setScale] = useState(1);
   const [selectedConcept, setSelectedConcept] = useState<ConceptDetail | null>(
     null
@@ -89,10 +92,10 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
             <div className="text-center sm:text-left">
               <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent" style={{textAlign: 'center'}}>
-                CS50P Mind Map
+                {t('app.title')}
               </h1>
               <p className="text-xs sm:text-sm lg:text-base text-slate-600 dark:text-slate-400 mt-1">
-                Explore os conceitos de cada aula interativamente
+                {t('app.subtitle')}
               </p>
             </div>
 
@@ -113,7 +116,7 @@ export default function Home() {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="bg-slate-800 text-slate-200 border-slate-700">
-                    <p>Diminuir Zoom</p>
+                    <p>{t('header.zoomOut')}</p>
                   </TooltipContent>
                 </Tooltip>
                 <span className="text-xs sm:text-sm font-medium w-10 sm:w-14 text-center text-slate-200">
@@ -132,7 +135,7 @@ export default function Home() {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="bg-slate-800 text-slate-200 border-slate-700">
-                    <p>Aumentar Zoom</p>
+                    <p>{t('header.zoomIn')}</p>
                   </TooltipContent>
                 </Tooltip>
                 <div className="w-px h-4 sm:h-6 bg-slate-600 mx-1 sm:mx-2" />
@@ -149,7 +152,7 @@ export default function Home() {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom" className="bg-slate-800 text-slate-200 border-slate-700">
-                    <p>Resetar Zoom (100%)</p>
+                    <p>{t('header.resetZoom')}</p>
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -167,7 +170,7 @@ export default function Home() {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="bg-slate-800 text-slate-200 border-slate-700">
-                  <p>Perfil do Usuário</p>
+                  <p>{t('header.profile')}</p>
                 </TooltipContent>
               </Tooltip>
               
@@ -184,9 +187,12 @@ export default function Home() {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="bg-slate-800 text-slate-200 border-slate-700">
-                  <p>Testar Conhecimentos</p>
+                  <p>{t('header.quiz')}</p>
                 </TooltipContent>
               </Tooltip>
+              
+              {/* Language Switcher */}
+              <LanguageSwitcher />
             </div>
           </div>
         </div>
@@ -199,18 +205,17 @@ export default function Home() {
             {/* Instruções */}
             <div className="mb-6 sm:mb-8 p-3 sm:p-4 lg:p-6 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 rounded-lg transition-colors duration-300">
               <h2 className="text-base sm:text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2">
-                Como usar este mapa mental:
+                {t('instructions.title')}
               </h2>
               <ul className="text-xs sm:text-sm text-blue-800 dark:text-blue-200 space-y-1">
-                <li>✨ Clique nas caixas para expandir/recolher os conceitos</li>
+                <li>✨ {t('instructions.item1')}</li>
                 <li>
-                  📖 Clique em um conceito para ver exemplos de código no painel
-                  lateral
+                  📖 {t('instructions.item2')}
                 </li>
-                <li>🔍 Use os controles de zoom para ajustar a visualização</li>
-                <li>📊 Explore a hierarquia de tópicos de cada aula</li>
-                <li>🎯 Acesse o Quiz para testar seus conhecimentos</li>
-                <li>👤 Veja seu progresso na seção Perfil</li>
+                <li>🔍 {t('instructions.item3')}</li>
+                <li>📊 {t('instructions.item4')}</li>
+                <li>🎯 {t('instructions.item5')}</li>
+                <li>👤 {t('instructions.item6')}</li>
               </ul>
             </div>
 
@@ -223,7 +228,7 @@ export default function Home() {
                 className="gap-2 text-xs sm:text-sm dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 dark:text-slate-200"
               >
                 <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">Baixar Mapa</span>
+                <span className="hidden sm:inline">{t('buttons.downloadMap')}</span>
                 <span className="inline sm:hidden">Baixar</span>
               </Button>
             </div>

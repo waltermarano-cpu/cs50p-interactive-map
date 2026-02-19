@@ -1,0 +1,74 @@
+{
+  "app": {
+    "title": "Mapa Mental CS50P",
+    "subtitle": "Explore os conceitos de cada aula interativamente"
+  },
+  "header": {
+    "zoomOut": "Diminuir Zoom",
+    "zoomIn": "Aumentar Zoom",
+    "resetZoom": "Resetar Zoom (100%)",
+    "profile": "Perfil do Usuário",
+    "quiz": "Testar Conhecimentos",
+    "language": "Idioma"
+  },
+  "instructions": {
+    "title": "Como usar este mapa mental:",
+    "item1": "Clique nas caixas para expandir/recolher os conceitos",
+    "item2": "Clique em um conceito para ver exemplos de código no painel lateral",
+    "item3": "Use os controles de zoom para ajustar a visualização",
+    "item4": "Explore a hierarquia de tópicos de cada aula",
+    "item5": "Acesse o Quiz para testar seus conhecimentos",
+    "item6": "Veja seu progresso na seção Perfil"
+  },
+  "navigation": {
+    "backToMap": "Voltar ao Mapa Mental"
+  },
+  "profile": {
+    "title": "Estudante",
+    "email": "seu@email.com",
+    "level": "Nível",
+    "points": "Pontos",
+    "bestScore": "Melhor Score",
+    "edit": "Editar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "reset": "Resetar Perfil",
+    "confirmReset": "Tem certeza que deseja resetar seu perfil? Isso apagará todo o progresso.",
+    "statistics": "Estatísticas",
+    "quizzesCompleted": "Quizzes Completados",
+    "classesExplored": "Aulas Exploradas"
+  },
+  "levels": {
+    "iniciante": "Iniciante",
+    "intermediário": "Intermediário",
+    "avançado": "Avançado"
+  },
+  "mindmap": {
+    "cs50p": "CS50P: Python",
+    "introduction": "Introdução à Programação com Python",
+    "lesson0": "Aula 0: Funções e Variáveis",
+    "lesson0Desc": "Fundamentos de programação",
+    "lesson1": "Aula 1: Condicionais",
+    "lesson1Desc": "Lógica de decisão",
+    "lesson2": "Aula 2: Loops",
+    "lesson2Desc": "Iteração e repetição",
+    "lesson3": "Aula 3: Exceções",
+    "lesson3Desc": "Tratamento de erros",
+    "lesson4": "Aula 4: Bibliotecas",
+    "lesson4Desc": "Módulos e pacotes",
+    "lesson5": "Aula 5: Testes Unitários",
+    "lesson5Desc": "Validação de código",
+    "lesson6": "Aula 6: Arquivos",
+    "lesson6Desc": "Leitura e escrita",
+    "lesson7": "Aula 7: Expressões Regulares",
+    "lesson7Desc": "Padrões de texto",
+    "lesson8": "Aula 8: Objetos e Classes",
+    "lesson8Desc": "Programação orientada a objetos"
+  },
+  "buttons": {
+    "downloadMap": "Baixar Mapa"
+  },
+  "messages": {
+    "featureComing": "Recurso em breve"
+  }
+}

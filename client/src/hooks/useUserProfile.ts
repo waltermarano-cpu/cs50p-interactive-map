@@ -66,18 +66,13 @@ export function useUserProfile() {
 
   // Salvar perfil no localStorage
   const saveProfile = (updatedProfile: UserProfile) => {
-    console.log('saveProfile chamado com:', updatedProfile);
     setProfile(updatedProfile);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedProfile));
-    console.log('Salvo no localStorage:', localStorage.getItem(STORAGE_KEY));
   };
 
   // Atualizar nome do usuário
   const updateNome = (nome: string) => {
-    console.log('updateNome chamado com:', nome);
-    console.log('Profile atual:', profile);
     const updated = { ...profile, nome };
-    console.log('Profile atualizado:', updated);
     saveProfile(updated);
   };
 
@@ -89,9 +84,7 @@ export function useUserProfile() {
 
   // Atualizar nome e email juntos
   const updateProfile = (nome: string, email: string) => {
-    console.log('updateProfile chamado com nome:', nome, 'email:', email);
     const updated = { ...profile, nome, email };
-    console.log('Profile atualizado:', updated);
     saveProfile(updated);
   };
 

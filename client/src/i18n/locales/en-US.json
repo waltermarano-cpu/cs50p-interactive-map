@@ -1,0 +1,74 @@
+{
+  "app": {
+    "title": "CS50P Mind Map",
+    "subtitle": "Explore the concepts of each lecture interactively"
+  },
+  "header": {
+    "zoomOut": "Zoom Out",
+    "zoomIn": "Zoom In",
+    "resetZoom": "Reset Zoom (100%)",
+    "profile": "User Profile",
+    "quiz": "Test Your Knowledge",
+    "language": "Language"
+  },
+  "instructions": {
+    "title": "How to use this mind map:",
+    "item1": "Click on boxes to expand/collapse concepts",
+    "item2": "Click on a concept to see code examples in the side panel",
+    "item3": "Use zoom controls to adjust the view",
+    "item4": "Explore the topic hierarchy for each lecture",
+    "item5": "Access the Quiz to test your knowledge",
+    "item6": "View your progress in the Profile section"
+  },
+  "navigation": {
+    "backToMap": "Back to Mind Map"
+  },
+  "profile": {
+    "title": "Student",
+    "email": "your@email.com",
+    "level": "Level",
+    "points": "Points",
+    "bestScore": "Best Score",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "reset": "Reset Profile",
+    "confirmReset": "Are you sure you want to reset your profile? This will erase all your progress.",
+    "statistics": "Statistics",
+    "quizzesCompleted": "Quizzes Completed",
+    "classesExplored": "Classes Explored"
+  },
+  "levels": {
+    "iniciante": "Beginner",
+    "intermediário": "Intermediate",
+    "avançado": "Advanced"
+  },
+  "mindmap": {
+    "cs50p": "CS50P: Python",
+    "introduction": "Introduction to Programming with Python",
+    "lesson0": "Lecture 0: Functions and Variables",
+    "lesson0Desc": "Programming fundamentals",
+    "lesson1": "Lecture 1: Conditionals",
+    "lesson1Desc": "Decision logic",
+    "lesson2": "Lecture 2: Loops",
+    "lesson2Desc": "Iteration and repetition",
+    "lesson3": "Lecture 3: Exceptions",
+    "lesson3Desc": "Error handling",
+    "lesson4": "Lecture 4: Libraries",
+    "lesson4Desc": "Modules and packages",
+    "lesson5": "Lecture 5: Unit Tests",
+    "lesson5Desc": "Code validation",
+    "lesson6": "Lecture 6: Files",
+    "lesson6Desc": "Reading and writing",
+    "lesson7": "Lecture 7: Regular Expressions",
+    "lesson7Desc": "Text patterns",
+    "lesson8": "Lecture 8: Objects and Classes",
+    "lesson8Desc": "Object-oriented programming"
+  },
+  "buttons": {
+    "downloadMap": "Download Map"
+  },
+  "messages": {
+    "featureComing": "Feature coming soon"
+  }
+}

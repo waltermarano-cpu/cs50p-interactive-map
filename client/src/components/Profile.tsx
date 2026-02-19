@@ -24,7 +24,6 @@ export default function Profile({ onClose }: ProfileProps) {
   }, [profile.nome, profile.email]);
 
   const handleSalvar = () => {
-    console.log('handleSalvar chamado - nome:', nome, 'email:', email);
     // Atualizar nome e email juntos em uma única operação
     updateProfile(nome.trim() || profile.nome, email.trim() || profile.email);
     setEditMode(false);

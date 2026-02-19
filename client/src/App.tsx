@@ -9,6 +9,7 @@ import QuizPage from "./pages/QuizPage";
 import ProfilePage from "./pages/ProfilePage";
 import ConnectionStatus from "./components/ConnectionStatus";
 import { useServiceWorker } from "./hooks/useServiceWorker";
+import './i18n/config';
 
 
 function Router() {
