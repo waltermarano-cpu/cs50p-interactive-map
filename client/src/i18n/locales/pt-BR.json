@@ -107,6 +107,21 @@
     "correct": "Correto!",
     "incorrect": "Incorreto!",
     "timeElapsed": "Tempo decorrido",
-    "results": "Resultados do Quiz"
+    "results": "Resultados do Quiz",
+    "progress": "Progresso",
+    "accuracy": "Acurácia",
+    "explanation": "Explicação",
+    "loading": "Carregando quiz",
+    "error": "Erro ao carregar quiz",
+    "restart": "Reiniciar",
+    "restartDescription": "Fazer o quiz novamente",
+    "perfectScore": "Perfeito! Você acertou todas as questões!",
+    "greatJob": "Excelente! Você teve um ótimo desempenho!",
+    "goodJob": "Bom trabalho! Continue praticando para melhorar!",
+    "tryAgain": "Tente novamente! Revise os conceitos e faça o quiz de novo.",
+    "difficulty": "Dificuldade",
+    "difficultyEasy": "Fácil",
+    "difficultyMedium": "Médio",
+    "difficultyHard": "Difícil"
   }
 }

@@ -8,7 +8,7 @@
     "zoomIn": "Zoom In",
     "resetZoom": "Reset Zoom (100%)",
     "profile": "User Profile",
-    "quiz": "Test Your Knowledge",
+    "quiz": "Test Knowledge",
     "language": "Language"
   },
   "instructions": {
@@ -95,7 +95,7 @@
     "closePanel": "Close Panel"
   },
   "quiz": {
-    "title": "Test Your Knowledge",
+    "title": "Test Knowledge",
     "selectLesson": "Select a lesson to start",
     "question": "Question",
     "of": "of",
@@ -107,6 +107,21 @@
     "correct": "Correct!",
     "incorrect": "Incorrect!",
     "timeElapsed": "Time elapsed",
-    "results": "Quiz Results"
+    "results": "Quiz Results",
+    "progress": "Progress",
+    "accuracy": "Accuracy",
+    "explanation": "Explanation",
+    "loading": "Loading quiz",
+    "error": "Error loading quiz",
+    "restart": "Restart",
+    "restartDescription": "Take the quiz again",
+    "perfectScore": "Perfect! You got all questions correct!",
+    "greatJob": "Excellent! You performed great!",
+    "goodJob": "Good work! Keep practicing to improve!",
+    "tryAgain": "Try again! Review the concepts and take the quiz again.",
+    "difficulty": "Difficulty",
+    "difficultyEasy": "Easy",
+    "difficultyMedium": "Medium",
+    "difficultyHard": "Hard"
   }
 }
