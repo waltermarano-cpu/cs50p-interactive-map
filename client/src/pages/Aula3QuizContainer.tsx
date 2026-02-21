@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import QuizModuleProgress from "../components/QuizModuleProgress";
 import QuizQuestion from '../components/QuizQuestion';
+import { useState, useEffect, useCallback } from "react";
 import {
   aula3QuizModule, // Importa o módulo específico da Aula 3
   selectUniqueQuizQuestions,
   loadUserProgress,
   saveUserProgress,
-  Question,
+  Question, UserQuestionProgress,
   UserModuleProgress,
 } from '../utils/quiz-core';
 import { RefreshCw } from 'lucide-react';
