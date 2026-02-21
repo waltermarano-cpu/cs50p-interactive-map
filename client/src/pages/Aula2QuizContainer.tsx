@@ -6,7 +6,7 @@ import {
   selectUniqueQuizQuestions,
   loadUserProgress,
   saveUserProgress,
-  Question,
+  Question, UserQuestionProgress,
   UserModuleProgress,
 } from '../utils/quiz-core';
 import { RefreshCw } from 'lucide-react';
