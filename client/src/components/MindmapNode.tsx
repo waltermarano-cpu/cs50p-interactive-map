@@ -1,7 +1,9 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, BookOpen } from "lucide-react";
 import { useState } from "react";
 import { MindmapNode as MindmapNodeType } from "@/data/mindmapData";
 import { ConceptDetail, conceptDetails } from "@/data/conceptDetails";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 interface MindmapNodeProps {
   node: MindmapNodeType;
@@ -9,6 +11,7 @@ interface MindmapNodeProps {
   isRoot?: boolean;
   onSelectConcept?: (concept: ConceptDetail) => void;
   selectedId?: string;
+  onQuizClick?: (moduleNumber: number, moduleName: string) => void;
 }
 
 export default function MindmapNode({
@@ -17,6 +20,7 @@ export default function MindmapNode({
   isRoot = false,
   onSelectConcept,
   selectedId,
+  onQuizClick,
 }: MindmapNodeProps) {
   const [isExpanded, setIsExpanded] = useState(isRoot);
 
@@ -50,46 +54,80 @@ export default function MindmapNode({
     }
   };
 
+  // Extrair número da aula do ID (ex: "lesson0" -> 0)
+  const extractLessonNumber = (id: string): number | null => {
+    const match = id.match(/lesson(\d+)/);
+    return match ? parseInt(match[1], 10) : null;
+  };
+
+  const lessonNumber = extractLessonNumber(node.id);
+  const isLesson = lessonNumber !== null && isLevel0;
+
   return (
     <div className="flex flex-col items-start gap-2">
-      <button
-        onClick={handleClick}
-        className={`
-          relative group
-          ${sizeClasses}
-          ${bgGradient}
-          rounded-lg
-          text-white font-semibold
-          shadow-md hover:shadow-lg
-          transition-all duration-300
-          transform hover:scale-105
-          flex items-center gap-2
-          whitespace-nowrap
-          border border-white/20
-          backdrop-blur-sm
-          ${selectedId === node.id ? "ring-2 ring-white ring-offset-2" : ""}
-        `}
-      >
-        {hasChildren && (
-          <ChevronDown
-            size={18}
-            className={`transition-transform duration-300 flex-shrink-0 ${
-              isExpanded ? "rotate-180" : ""
-            }`}
-          />
-        )}
-        <div className="flex flex-col items-start">
-          <span className="font-bold">{node.title}</span>
-          {node.description && (
-            <span className="text-xs opacity-90 font-normal">
-              {node.description}
-            </span>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handleClick}
+          className={`
+            relative group
+            ${sizeClasses}
+            ${bgGradient}
+            rounded-lg
+            text-white font-semibold
+            shadow-md hover:shadow-lg
+            transition-all duration-300
+            transform hover:scale-105
+            flex items-center gap-2
+            whitespace-nowrap
+            border border-white/20
+            backdrop-blur-sm
+            ${selectedId === node.id ? "ring-2 ring-white ring-offset-2" : ""}
+          `}
+        >
+          {hasChildren && (
+            <ChevronDown
+              size={18}
+              className={`transition-transform duration-300 flex-shrink-0 ${
+                isExpanded ? "rotate-180" : ""
+              }`}
+            />
           )}
-        </div>
+          <div className="flex flex-col items-start">
+            <span className="font-bold">{node.title}</span>
+            {node.description && (
+              <span className="text-xs opacity-90 font-normal">
+                {node.description}
+              </span>
+            )}
+          </div>
 
-        {/* Efeito hover */}
-        <div className="absolute inset-0 rounded-lg bg-white/0 group-hover:bg-white/10 transition-colors duration-300" />
-      </button>
+          {/* Efeito hover */}
+          <div className="absolute inset-0 rounded-lg bg-white/0 group-hover:bg-white/10 transition-colors duration-300" />
+        </button>
+
+        {/* Botão Fazer Quiz (apenas para aulas) */}
+        {isLesson && onQuizClick && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onQuizClick(lessonNumber!, node.title);
+                }}
+                size="sm"
+                variant="outline"
+                className="gap-2 h-9 px-2 bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 flex-shrink-0"
+              >
+                <BookOpen className="w-4 h-4" />
+                <span className="text-xs font-semibold hidden sm:inline">Quiz</span>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right" className="bg-slate-800 text-slate-200 border-slate-700">
+              <p>Fazer quiz desta aula</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </div>
 
       {/* Filhos expandidos */}
       {hasChildren && isExpanded && (
@@ -108,6 +146,7 @@ export default function MindmapNode({
               isRoot={false}
               onSelectConcept={onSelectConcept}
               selectedId={selectedId}
+              onQuizClick={onQuizClick}
             />
           ))}
         </div>

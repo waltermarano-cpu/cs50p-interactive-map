@@ -40,7 +40,8 @@
       "explanation": "`re.findall()` retorna uma lista de todas as correspondências não sobrepostas do padrão na string.",
       "difficulty": "medium",
       "tags": ["regex", "function"]
-    },\n    {
+    },
+    {
       "id": "re005",
       "type": "multiple_choice",
       "questionText": "Para que serve o metacaractere `^` no início de uma expressão regular?",
@@ -91,7 +92,7 @@
     {
       "id": "re010",
       "type": "multiple_choice",
-      "questionText": "Qual é a finalidade de usar `r` antes de uma string de expressão regular em Python (ex: `r'\d+'`)?",
+      "questionText": "Qual é a finalidade de usar `r` antes de uma string de expressão regular em Python (ex: `r'\\d+'`)?",
       "options": ["Torna a regex mais rápida", "Indica que é uma string bruta (raw string)", "Converte a regex para binário", "Define a regex como global"],
       "correctAnswer": "Indica que é uma string bruta (raw string)",
       "explanation": "O prefixo `r` em uma string literal em Python indica que é uma 'raw string', o que é útil para expressões regulares, pois evita que as barras invertidas sejam interpretadas como sequências de escape Python.",

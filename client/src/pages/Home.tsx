@@ -1,5 +1,6 @@
-import MindmapNode from "@/components/MindmapNode";
 import DetailPanel from "@/components/DetailPanel";
+import MindmapNode from "@/components/MindmapNode";
+import QuizModal from "@/components/QuizModal";
 
 import { mindmapData } from "@/data/mindmapData";
 import { ConceptDetail } from "@/data/conceptDetails";
@@ -19,6 +20,8 @@ export default function Home() {
   );
   const [selectedId, setSelectedId] = useState<string>("");
   const [, setLocation] = useLocation();
+  const [quizOpen, setQuizOpen] = useState(false);
+  const [selectedQuizModule, setSelectedQuizModule] = useState<{ number: number; name: string } | null>(null);
 
   const handleZoomIn = () => setScale((prev) => Math.min(prev + 0.1, 1.5));
   const handleZoomOut = () => setScale((prev) => Math.max(prev - 0.1, 0.7));
@@ -53,17 +56,30 @@ export default function Home() {
             setSelectedConcept(null);
             setSelectedId('');
           }
+          if (quizOpen) {
+            handleCloseQuiz();
+          }
           break;
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [selectedConcept]);
+  }, [selectedConcept, quizOpen]);
 
   const handleSelectConcept = (concept: ConceptDetail) => {
     setSelectedConcept(concept);
     setSelectedId(concept.id);
+  };
+
+  const handleQuizClick = (moduleNumber: number, moduleName: string) => {
+    setSelectedQuizModule({ number: moduleNumber, name: moduleName });
+    setQuizOpen(true);
+  };
+
+  const handleCloseQuiz = () => {
+    setQuizOpen(false);
+    setSelectedQuizModule(null);
   };
 
   const handleDownload = () => {
@@ -250,6 +266,7 @@ export default function Home() {
                   isRoot={true}
                   onSelectConcept={handleSelectConcept}
                   selectedId={selectedId}
+                  onQuizClick={handleQuizClick}
                 />
               </div>
             </div>
@@ -267,6 +284,16 @@ export default function Home() {
           />
         )}
       </div>
+
+      {/* Quiz Modal */}
+      {selectedQuizModule && (
+        <QuizModal
+          isOpen={quizOpen}
+          moduleNumber={selectedQuizModule.number}
+          moduleName={selectedQuizModule.name}
+          onClose={handleCloseQuiz}
+        />
+      )}
     </div>
   );
 }
