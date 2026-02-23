@@ -9,68 +9,109 @@ interface DownloadOptions {
 }
 
 // Converter cores OKLCH para RGB (suportado por html2canvas)
-const convertOklchToRgb = (oklchColor: string): string => {
+const oklchToRgb = (oklchStr: string): string => {
   // Se não for OKLCH, retorna como está
-  if (!oklchColor.includes('oklch')) {
-    return oklchColor;
+  if (!oklchStr || !oklchStr.includes('oklch')) {
+    return oklchStr;
   }
 
-  // Extrair valores OKLCH: oklch(L C H)
-  const match = oklchColor.match(/oklch\(([\d.]+)%?\s+([\d.]+)\s+([\d.]+)deg?\)/);
-  if (!match) return oklchColor;
+  try {
+    // Extrair valores OKLCH: oklch(L C H / alpha) ou oklch(L C H)
+    const match = oklchStr.match(/oklch\(([\d.]+)%?\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/\s*([\d.]+))?\)/);
+    if (!match) return oklchStr;
 
-  const [, l, c, h] = match;
-  const L = parseFloat(l) / 100;
-  const C = parseFloat(c);
-  const H = parseFloat(h) * (Math.PI / 180);
+    const L = parseFloat(match[1]) / 100;
+    const C = parseFloat(match[2]);
+    const H = parseFloat(match[3]) * (Math.PI / 180);
+    const alpha = match[4] ? parseFloat(match[4]) : 1;
 
-  // Converter OKLCH para LMS
-  const l_ = L + 0.3963377774 * Math.cos(H) * C + 0.2158037573 * Math.sin(H) * C;
-  const m_ = L - 0.1055613458 * Math.cos(H) * C - 0.0638541728 * Math.sin(H) * C;
-  const s_ = L - 0.0894841775 * Math.cos(H) * C + 1.2914855480 * Math.sin(H) * C;
+    // Converter OKLCH para LMS
+    const l_ = L + 0.3963377774 * Math.cos(H) * C + 0.2158037573 * Math.sin(H) * C;
+    const m_ = L - 0.1055613458 * Math.cos(H) * C - 0.0638541728 * Math.sin(H) * C;
+    const s_ = L - 0.0894841775 * Math.cos(H) * C + 1.2914855480 * Math.sin(H) * C;
 
-  const l__ = l_ * l_ * l_;
-  const m__ = m_ * m_ * m_;
-  const s__ = s_ * s_ * s_;
+    const l__ = l_ * l_ * l_;
+    const m__ = m_ * m_ * m_;
+    const s__ = s_ * s_ * s_;
 
-  // Converter LMS para RGB
-  const r = 4.0767416621 * l__ - 3.3077363322 * m__ + 0.2309101289 * s__;
-  const g = -1.2684380046 * l__ + 2.6097574011 * m__ - 0.3413193761 * s__;
-  const b = -0.0041960863 * l__ - 0.7034186147 * m__ + 1.7076147010 * s__;
+    // Converter LMS para RGB linear
+    const r = 4.0767416621 * l__ - 3.3077363322 * m__ + 0.2309101289 * s__;
+    const g = -1.2684380046 * l__ + 2.6097574011 * m__ - 0.3413193761 * s__;
+    const b = -0.0041960863 * l__ - 0.7034186147 * m__ + 1.7076147010 * s__;
 
-  // Normalizar para 0-255
-  const toSRGB = (x: number) => {
-    const abs = Math.abs(x);
-    const sign = x < 0 ? -1 : 1;
-    const v = abs <= 0.0031308 ? 12.92 * abs : 1.055 * Math.pow(abs, 1 / 2.4) - 0.055;
-    return Math.round(Math.max(0, Math.min(255, v * 255)) * sign);
-  };
+    // Aplicar gamma correction
+    const toSRGB = (x: number) => {
+      if (x <= 0.0031308) return 12.92 * x;
+      return 1.055 * Math.pow(x, 1 / 2.4) - 0.055;
+    };
 
-  const red = Math.max(0, Math.min(255, toSRGB(r)));
-  const green = Math.max(0, Math.min(255, toSRGB(g)));
-  const blue = Math.max(0, Math.min(255, toSRGB(b)));
+    const red = Math.round(Math.max(0, Math.min(1, toSRGB(r))) * 255);
+    const green = Math.round(Math.max(0, Math.min(1, toSRGB(g))) * 255);
+    const blue = Math.round(Math.max(0, Math.min(1, toSRGB(b))) * 255);
 
-  return `rgb(${red}, ${green}, ${blue})`;
+    if (alpha < 1) {
+      return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+    }
+    return `rgb(${red}, ${green}, ${blue})`;
+  } catch (e) {
+    console.warn('Erro ao converter cor OKLCH:', oklchStr, e);
+    return oklchStr;
+  }
 };
 
-// Remover cores OKLCH do elemento clonado
-const removeOklchColors = (element: Element) => {
+// Aplicar estilos RGB a todos os elementos (ANTES de capturar)
+const applyRgbStyles = (element: Element) => {
   const allElements = element.querySelectorAll('*');
-  allElements.forEach((el) => {
-    const style = window.getComputedStyle(el);
-    const bgColor = style.backgroundColor;
-    const textColor = style.color;
-    const borderColor = style.borderColor;
+  const originalStyles: Array<{ el: HTMLElement; styles: Partial<CSSStyleDeclaration> }> = [];
 
-    if (bgColor.includes('oklch')) {
-      (el as HTMLElement).style.backgroundColor = convertOklchToRgb(bgColor);
+  allElements.forEach((el) => {
+    const htmlEl = el as HTMLElement;
+    const style = window.getComputedStyle(el);
+    const backup: Partial<CSSStyleDeclaration> = {};
+
+    // Verificar e converter backgroundColor
+    if (style.backgroundColor && style.backgroundColor.includes('oklch')) {
+      backup.backgroundColor = htmlEl.style.backgroundColor;
+      htmlEl.style.backgroundColor = oklchToRgb(style.backgroundColor);
     }
-    if (textColor.includes('oklch')) {
-      (el as HTMLElement).style.color = convertOklchToRgb(textColor);
+
+    // Verificar e converter color (text color)
+    if (style.color && style.color.includes('oklch')) {
+      backup.color = htmlEl.style.color;
+      htmlEl.style.color = oklchToRgb(style.color);
     }
-    if (borderColor.includes('oklch')) {
-      (el as HTMLElement).style.borderColor = convertOklchToRgb(borderColor);
+
+    // Verificar e converter borderColor
+    if (style.borderColor && style.borderColor.includes('oklch')) {
+      backup.borderColor = htmlEl.style.borderColor;
+      htmlEl.style.borderColor = oklchToRgb(style.borderColor);
     }
+
+    // Verificar e converter borderTopColor, borderRightColor, etc
+    ['borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor'].forEach(prop => {
+      const value = style[prop as any];
+      if (value && value.includes('oklch')) {
+        backup[prop as any] = htmlEl.style[prop as any];
+        htmlEl.style[prop as any] = oklchToRgb(value);
+      }
+    });
+
+    if (Object.keys(backup).length > 0) {
+      originalStyles.push({ el: htmlEl, styles: backup });
+    }
+  });
+
+  return originalStyles;
+};
+
+// Restaurar estilos originais
+const restoreStyles = (originalStyles: Array<{ el: HTMLElement; styles: Partial<CSSStyleDeclaration> }>) => {
+  originalStyles.forEach(({ el, styles }) => {
+    Object.entries(styles).forEach(([key, value]) => {
+      if (value !== undefined) {
+        el.style[key as any] = value as string;
+      }
+    });
   });
 };
 
@@ -83,6 +124,8 @@ export const useMindmapDownload = () => {
         scale = 2,
         backgroundColor = '#ffffff'
       } = options;
+
+      let originalStyles: Array<{ el: HTMLElement; styles: Partial<CSSStyleDeclaration> }> = [];
 
       try {
         const element = document.getElementById(elementId);
@@ -100,6 +143,9 @@ export const useMindmapDownload = () => {
         const originalCursor = document.body.style.cursor;
         document.body.style.cursor = 'wait';
 
+        // APLICAR ESTILOS RGB ANTES DE CAPTURAR
+        originalStyles = applyRgbStyles(element);
+
         // Capturar o elemento como canvas
         const canvas = await html2canvas(element, {
           backgroundColor: backgroundColor,
@@ -115,14 +161,11 @@ export const useMindmapDownload = () => {
             buttons.forEach(btn => {
               btn.style.display = 'none';
             });
-
-            // Converter cores OKLCH para RGB
-            const clonedElement = clonedDocument.getElementById(elementId);
-            if (clonedElement) {
-              removeOklchColors(clonedElement);
-            }
           }
         });
+
+        // Restaurar estilos originais
+        restoreStyles(originalStyles);
 
         // Restaurar cursor
         document.body.style.cursor = originalCursor;
@@ -147,6 +190,12 @@ export const useMindmapDownload = () => {
         return true;
       } catch (error) {
         console.error('Erro ao fazer download do mapa mental:', error);
+        
+        // Restaurar estilos em caso de erro
+        if (originalStyles.length > 0) {
+          restoreStyles(originalStyles);
+        }
+        
         document.body.style.cursor = 'default';
         return false;
       }
