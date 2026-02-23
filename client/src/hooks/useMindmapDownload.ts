@@ -8,113 +8,6 @@ interface DownloadOptions {
   backgroundColor?: string;
 }
 
-// Converter cores OKLCH para RGB (suportado por html2canvas)
-const oklchToRgb = (oklchStr: string): string => {
-  // Se não for OKLCH, retorna como está
-  if (!oklchStr || !oklchStr.includes('oklch')) {
-    return oklchStr;
-  }
-
-  try {
-    // Extrair valores OKLCH: oklch(L C H / alpha) ou oklch(L C H)
-    const match = oklchStr.match(/oklch\(([\d.]+)%?\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*(?:\/\s*([\d.]+))?\)/);
-    if (!match) return oklchStr;
-
-    const L = parseFloat(match[1]) / 100;
-    const C = parseFloat(match[2]);
-    const H = parseFloat(match[3]) * (Math.PI / 180);
-    const alpha = match[4] ? parseFloat(match[4]) : 1;
-
-    // Converter OKLCH para LMS
-    const l_ = L + 0.3963377774 * Math.cos(H) * C + 0.2158037573 * Math.sin(H) * C;
-    const m_ = L - 0.1055613458 * Math.cos(H) * C - 0.0638541728 * Math.sin(H) * C;
-    const s_ = L - 0.0894841775 * Math.cos(H) * C + 1.2914855480 * Math.sin(H) * C;
-
-    const l__ = l_ * l_ * l_;
-    const m__ = m_ * m_ * m_;
-    const s__ = s_ * s_ * s_;
-
-    // Converter LMS para RGB linear
-    const r = 4.0767416621 * l__ - 3.3077363322 * m__ + 0.2309101289 * s__;
-    const g = -1.2684380046 * l__ + 2.6097574011 * m__ - 0.3413193761 * s__;
-    const b = -0.0041960863 * l__ - 0.7034186147 * m__ + 1.7076147010 * s__;
-
-    // Aplicar gamma correction
-    const toSRGB = (x: number) => {
-      if (x <= 0.0031308) return 12.92 * x;
-      return 1.055 * Math.pow(x, 1 / 2.4) - 0.055;
-    };
-
-    const red = Math.round(Math.max(0, Math.min(1, toSRGB(r))) * 255);
-    const green = Math.round(Math.max(0, Math.min(1, toSRGB(g))) * 255);
-    const blue = Math.round(Math.max(0, Math.min(1, toSRGB(b))) * 255);
-
-    if (alpha < 1) {
-      return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
-    }
-    return `rgb(${red}, ${green}, ${blue})`;
-  } catch (e) {
-    console.warn('Erro ao converter cor OKLCH:', oklchStr, e);
-    return oklchStr;
-  }
-};
-
-// Aplicar estilos RGB a todos os elementos (ANTES de capturar)
-const applyRgbStyles = (element: Element) => {
-  const allElements = element.querySelectorAll('*');
-  const originalStyles: Array<{ el: HTMLElement; styles: Partial<CSSStyleDeclaration> }> = [];
-
-  allElements.forEach((el) => {
-    const htmlEl = el as HTMLElement;
-    const style = window.getComputedStyle(el);
-    const backup: Partial<CSSStyleDeclaration> = {};
-
-    // Verificar e converter backgroundColor
-    if (style.backgroundColor && style.backgroundColor.includes('oklch')) {
-      backup.backgroundColor = htmlEl.style.backgroundColor;
-      htmlEl.style.backgroundColor = oklchToRgb(style.backgroundColor);
-    }
-
-    // Verificar e converter color (text color)
-    if (style.color && style.color.includes('oklch')) {
-      backup.color = htmlEl.style.color;
-      htmlEl.style.color = oklchToRgb(style.color);
-    }
-
-    // Verificar e converter borderColor
-    if (style.borderColor && style.borderColor.includes('oklch')) {
-      backup.borderColor = htmlEl.style.borderColor;
-      htmlEl.style.borderColor = oklchToRgb(style.borderColor);
-    }
-
-    // Verificar e converter borderTopColor, borderRightColor, etc
-    ['borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor'].forEach(prop => {
-      const value = style[prop as any];
-      if (value && value.includes('oklch')) {
-        backup[prop as any] = htmlEl.style[prop as any];
-        htmlEl.style[prop as any] = oklchToRgb(value);
-      }
-    });
-
-    if (Object.keys(backup).length > 0) {
-      originalStyles.push({ el: htmlEl, styles: backup });
-    }
-  });
-
-  return originalStyles;
-};
-
-// Restaurar estilos originais
-const restoreStyles = (originalStyles: Array<{ el: HTMLElement; styles: Partial<CSSStyleDeclaration> }>) => {
-  originalStyles.forEach(({ el, styles }) => {
-    Object.entries(styles).forEach(([key, value]) => {
-      if (value !== undefined) {
-        el.style[key as any] = value as string;
-      }
-    });
-  });
-};
-
 export const useMindmapDownload = () => {
   const downloadMindmap = useCallback(
     async (elementId: string, options: DownloadOptions = {}) => {
@@ -124,8 +17,6 @@ export const useMindmapDownload = () => {
         scale = 2,
         backgroundColor = '#ffffff'
       } = options;
-
-      let originalStyles: Array<{ el: HTMLElement; styles: Partial<CSSStyleDeclaration> }> = [];
 
       try {
         const element = document.getElementById(elementId);
@@ -143,29 +34,85 @@ export const useMindmapDownload = () => {
         const originalCursor = document.body.style.cursor;
         document.body.style.cursor = 'wait';
 
-        // APLICAR ESTILOS RGB ANTES DE CAPTURAR
-        originalStyles = applyRgbStyles(element);
+        // Criar wrapper com estilos RGB simples (sem OKLCH)
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = `
+          position: absolute;
+          left: -9999px;
+          top: -9999px;
+          width: ${element.offsetWidth}px;
+          background-color: ${backgroundColor};
+          padding: 0;
+          margin: 0;
+        `;
 
-        // Capturar o elemento como canvas
-        const canvas = await html2canvas(element, {
+        // Clonar elemento e remover classes problemáticas
+        const clonedElement = element.cloneNode(true) as HTMLElement;
+        
+        // Remover todos os elementos de botão
+        const buttons = clonedElement.querySelectorAll('button');
+        buttons.forEach(btn => btn.remove());
+
+        // Remover classes Tailwind que usam OKLCH e aplicar estilos RGB simples
+        const allElements = clonedElement.querySelectorAll('*');
+        allElements.forEach((el) => {
+          const htmlEl = el as HTMLElement;
+          
+          // Remover todas as classes (para evitar OKLCH)
+          htmlEl.className = '';
+          
+          // Aplicar estilos RGB simples baseado no tipo de elemento
+          const tagName = htmlEl.tagName.toLowerCase();
+          
+          if (tagName === 'h1' || tagName === 'h2' || tagName === 'h3' || tagName === 'h4' || tagName === 'h5' || tagName === 'h6') {
+            htmlEl.style.cssText = `
+              color: #1e293b;
+              background-color: transparent;
+              font-weight: bold;
+              margin: 8px 0;
+              padding: 4px;
+            `;
+          } else if (tagName === 'p' || tagName === 'span' || tagName === 'div') {
+            htmlEl.style.cssText = `
+              color: #334155;
+              background-color: transparent;
+              margin: 4px 0;
+              padding: 2px;
+            `;
+          } else if (tagName === 'button') {
+            htmlEl.style.display = 'none';
+          }
+          
+          // Aplicar estilos de fundo para boxes/cards
+          if (htmlEl.getAttribute('data-node') || htmlEl.className.includes('node')) {
+            htmlEl.style.cssText = `
+              background-color: #e0f2fe;
+              border: 2px solid #0284c7;
+              border-radius: 8px;
+              padding: 12px;
+              margin: 8px;
+              color: #0c4a6e;
+              font-weight: 500;
+            `;
+          }
+        });
+
+        wrapper.appendChild(clonedElement);
+        document.body.appendChild(wrapper);
+
+        // Capturar o wrapper com html2canvas
+        const canvas = await html2canvas(wrapper, {
           backgroundColor: backgroundColor,
           scale: effectiveScale,
           useCORS: true,
           allowTaint: true,
           logging: false,
-          windowHeight: element.scrollHeight,
-          windowWidth: element.scrollWidth,
-          onclone: (clonedDocument) => {
-            // Remover elementos desnecessários do clone (botões, etc)
-            const buttons = clonedDocument.querySelectorAll('button');
-            buttons.forEach(btn => {
-              btn.style.display = 'none';
-            });
-          }
+          windowHeight: wrapper.scrollHeight,
+          windowWidth: wrapper.scrollWidth,
         });
 
-        // Restaurar estilos originais
-        restoreStyles(originalStyles);
+        // Remover wrapper do DOM
+        document.body.removeChild(wrapper);
 
         // Restaurar cursor
         document.body.style.cursor = originalCursor;
@@ -190,12 +137,6 @@ export const useMindmapDownload = () => {
         return true;
       } catch (error) {
         console.error('Erro ao fazer download do mapa mental:', error);
-        
-        // Restaurar estilos em caso de erro
-        if (originalStyles.length > 0) {
-          restoreStyles(originalStyles);
-        }
-        
         document.body.style.cursor = 'default';
         return false;
       }
