@@ -75,7 +75,10 @@
   "messages": {
     "featureComing": "Recurso em breve",
     "profileUpdated": "Perfil atualizado com sucesso!",
-    "profileReset": "Perfil resetado com sucesso!"
+    "profileReset": "Perfil resetado com sucesso!",
+    "downloading": "Baixando...",
+    "downloadSuccess": "Mapa mental baixado com sucesso!",
+    "downloadError": "Erro ao baixar o mapa mental. Tente novamente."
   },
   "profilePage": {
     "title": "Perfil do Usuário",

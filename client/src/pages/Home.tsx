@@ -11,10 +11,13 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useMindmapDownload } from '@/hooks/useMindmapDownload';
 
 export default function Home() {
   const { t } = useTranslation();
+  const { downloadMindmap } = useMindmapDownload();
   const [scale, setScale] = useState(1);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [selectedConcept, setSelectedConcept] = useState<ConceptDetail | null>(
     null
   );
@@ -82,21 +85,20 @@ export default function Home() {
     setSelectedQuizModule(null);
   };
 
-  const handleDownload = () => {
-    const element = document.getElementById("mindmap-container");
-    if (element) {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        canvas.width = element.offsetWidth;
-        canvas.height = element.offsetHeight;
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "cs50p-mindmap.png";
-        link.click();
+  const handleDownload = async () => {
+    setIsDownloading(true);
+    try {
+      const success = await downloadMindmap('mindmap-container', {
+        filename: `cs50p-mindmap-${new Date().toISOString().split('T')[0]}.png`,
+        scale: 2,
+        backgroundColor: '#ffffff'
+      });
+      
+      if (success) {
+        console.log('Mapa mental baixado com sucesso!');
       }
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -237,16 +239,24 @@ export default function Home() {
 
             {/* Botão para baixar */}
             <div className="mb-4 sm:mb-6 flex justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleDownload}
-                className="gap-2 text-xs sm:text-sm dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 dark:text-slate-200"
-              >
-                <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                <span className="hidden sm:inline">{t('buttons.downloadMap')}</span>
-                <span className="inline sm:hidden">Baixar</span>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownload}
+                    disabled={isDownloading}
+                    className="gap-2 text-xs sm:text-sm dark:bg-slate-800 dark:border-slate-700 dark:hover:bg-slate-700 dark:text-slate-200 disabled:opacity-50"
+                  >
+                    <Download className={`w-3 h-3 sm:w-4 sm:h-4 ${isDownloading ? 'animate-spin' : ''}`} />
+                    <span className="hidden sm:inline">{isDownloading ? 'Baixando...' : t('buttons.downloadMap')}</span>
+                    <span className="inline sm:hidden">Baixar</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="left" className="bg-slate-800 text-slate-200 border-slate-700">
+                  <p>{isDownloading ? 'Baixando...' : t('buttons.downloadMap')}</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
 
             {/* Mind Map */}

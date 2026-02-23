@@ -75,7 +75,10 @@
   "messages": {
     "featureComing": "Feature coming soon",
     "profileUpdated": "Profile updated successfully!",
-    "profileReset": "Profile reset successfully!"
+    "profileReset": "Profile reset successfully!",
+    "downloading": "Downloading...",
+    "downloadSuccess": "Mind map downloaded successfully!",
+    "downloadError": "Error downloading the mind map. Please try again."
   },
   "profilePage": {
     "title": "User Profile",
